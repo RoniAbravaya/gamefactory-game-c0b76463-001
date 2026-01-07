@@ -1,0 +1,259 @@
+{
+  "levels": [
+    {
+      "level_number": 1,
+      "name": "Gentle Start",
+      "is_free": true,
+      "unlock_requirement": "none",
+      "difficulty": 0.2,
+      "time_limit_seconds": null,
+      "target_score": 100,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 2,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 10,
+        "value": 10
+      },
+      "special_features": [],
+      "background_theme": "grassy_meadow",
+      "music_track": "level_1"
+    },
+    {
+      "level_number": 2,
+      "name": "Steady Pace",
+      "is_free": true,
+      "unlock_requirement": "none",
+      "difficulty": 0.3,
+      "time_limit_seconds": null,
+      "target_score": 150,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 4,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 15,
+        "value": 10
+      },
+      "special_features": [],
+      "background_theme": "grassy_meadow",
+      "music_track": "level_2"
+    },
+    {
+      "level_number": 3,
+      "name": "Picking Up Speed",
+      "is_free": true,
+      "unlock_requirement": "none",
+      "difficulty": 0.4,
+      "time_limit_seconds": 60,
+      "target_score": 200,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 6,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 20,
+        "value": 10
+      },
+      "special_features": [],
+      "background_theme": "grassy_meadow",
+      "music_track": "level_3"
+    },
+    {
+      "level_number": 4,
+      "name": "Narrowing Paths",
+      "is_free": false,
+      "unlock_requirement": "rewarded_ad",
+      "difficulty": 0.5,
+      "time_limit_seconds": 60,
+      "target_score": 300,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 8,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 25,
+        "value": 10
+      },
+      "special_features": [
+        "moving_platforms"
+      ],
+      "background_theme": "rocky_canyon",
+      "music_track": "level_4"
+    },
+    {
+      "level_number": 5,
+      "name": "Treacherous Terrain",
+      "is_free": false,
+      "unlock_requirement": "rewarded_ad",
+      "difficulty": 0.6,
+      "time_limit_seconds": 60,
+      "target_score": 400,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 10,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 30,
+        "value": 10
+      },
+      "special_features": [
+        "moving_platforms",
+        "disappearing_platforms"
+      ],
+      "background_theme": "rocky_canyon",
+      "music_track": "level_5"
+    },
+    {
+      "level_number": 6,
+      "name": "Treacherous Terrain II",
+      "is_free": false,
+      "unlock_requirement": "rewarded_ad",
+      "difficulty": 0.7,
+      "time_limit_seconds": 60,
+      "target_score": 500,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 12,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 35,
+        "value": 10
+      },
+      "special_features": [
+        "moving_platforms",
+        "disappearing_platforms",
+        "rotating_platforms"
+      ],
+      "background_theme": "rocky_canyon",
+      "music_track": "level_6"
+    },
+    {
+      "level_number": 7,
+      "name": "Gauntlet of Challenges",
+      "is_free": false,
+      "unlock_requirement": "rewarded_ad",
+      "difficulty": 0.8,
+      "time_limit_seconds": 60,
+      "target_score": 600,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 15,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 40,
+        "value": 10
+      },
+      "special_features": [
+        "moving_platforms",
+        "disappearing_platforms",
+        "rotating_platforms",
+        "bouncing_platforms"
+      ],
+      "background_theme": "rocky_canyon",
+      "music_track": "level_7"
+    },
+    {
+      "level_number": 8,
+      "name": "Perilous Ascent",
+      "is_free": false,
+      "unlock_requirement": "rewarded_ad",
+      "difficulty": 0.8,
+      "time_limit_seconds": 60,
+      "target_score": 700,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 18,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 45,
+        "value": 10
+      },
+      "special_features": [
+        "moving_platforms",
+        "disappearing_platforms",
+        "rotating_platforms",
+        "bouncing_platforms",
+        "speed_boosters"
+      ],
+      "background_theme": "rocky_canyon",
+      "music_track": "level_8"
+    },
+    {
+      "level_number": 9,
+      "name": "Dizzying Heights",
+      "is_free": false,
+      "unlock_requirement": "rewarded_ad",
+      "difficulty": 0.9,
+      "time_limit_seconds": 60,
+      "target_score": 800,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 20,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 50,
+        "value": 10
+      },
+      "special_features": [
+        "moving_platforms",
+        "disappearing_platforms",
+        "rotating_platforms",
+        "bouncing_platforms",
+        "speed_boosters",
+        "gravity_flippers"
+      ],
+      "background_theme": "rocky_canyon",
+      "music_track": "level_9"
+    },
+    {
+      "level_number": 10,
+      "name": "Treacherous Summit",
+      "is_free": false,
+      "unlock_requirement": "rewarded_ad",
+      "difficulty": 0.9,
+      "time_limit_seconds": 60,
+      "target_score": 900,
+      "obstacles": {
+        "type": "static_spikes",
+        "count": 25,
+        "speed": 0
+      },
+      "collectibles": {
+        "type": "coins",
+        "count": 55,
+        "value": 10
+      },
+      "special_features": [
+        "moving_platforms",
+        "disappearing_platforms",
+        "rotating_platforms",
+        "bouncing_platforms",
+        "speed_boosters",
+        "gravity_flippers",
+        "teleporters"
+      ],
+      "background_theme": "rocky_canyon",
+      "music_track": "level_10"
+    }
+  ]
+}
