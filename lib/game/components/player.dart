@@ -1,92 +1,115 @@
 import 'package:flame/components.dart';
 import 'package:flame/geometry.dart';
-import 'package:flame/input.dart';
-import 'package:flutter/services.dart';
+import 'package:flame/sprite.dart';
 
 /// Represents the player character in a platformer game.
-/// Handles movement, jumping, collision detection, and score tracking.
-class Player extends SpriteAnimationComponent
-    with HasGameRef, Hitbox, Collidable, KeyboardHandler {
-  Vector2 velocity = Vector2(0, 0);
-  final double gravity = 500;
-  final double jumpSpeed = -300;
-  final double moveSpeed = 150;
-  bool onGround = false;
-  int lives = 3;
-  int score = 0;
+class Player extends SpriteAnimationComponent with HasGameRef, Hitbox, Collidable {
+  final double speed = 200;
+  bool isJumping = false;
+  bool isInvulnerable = false;
+  int health = 3;
+  final double jumpStrength = 300;
+  final double gravity = 1000;
+  double ySpeed = 0;
 
-  Player({SpriteAnimation? animation, Vector2? position, Vector2? size})
-      : super(animation: animation, position: position, size: size) {
-    addHitbox(HitboxRectangle());
+  Player(Vector2 position)
+      : super(position: position, size: Vector2(50, 75), anchor: Anchor.center);
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    final spriteSheet = SpriteSheet(
+      image: await gameRef.images.load('player_spritesheet.png'),
+      srcSize: Vector2(50, 75),
+    );
+    animation = spriteSheet.createAnimation(row: 0, stepTime: 0.1, to: 4);
+    addShape(HitboxRectangle());
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    handleMovement(dt);
+    handleGravity(dt);
+    checkInvulnerability(dt);
+  }
 
-    // Apply gravity
-    velocity.y += gravity * dt;
-    position.add(velocity * dt);
+  void handleMovement(double dt) {
+    if (isJumping) {
+      ySpeed -= jumpStrength;
+      isJumping = false;
+    }
+    position.add(Vector2(0, ySpeed * dt));
+    ySpeed += gravity * dt;
+  }
 
-    // Check for ground contact
-    if (position.y > gameRef.size.y - size.y) {
-      position.y = gameRef.size.y - size.y;
-      onGround = true;
-      velocity.y = 0;
-    } else {
-      onGround = false;
+  void handleGravity(double dt) {
+    if (position.y > gameRef.size.y - size.y / 2) {
+      position.y = gameRef.size.y - size.y / 2;
+      ySpeed = 0;
+    }
+  }
+
+  void jump() {
+    if (!isJumping && position.y >= gameRef.size.y - size.y / 2) {
+      isJumping = true;
     }
   }
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, Collidable other) {
-    super.onCollision(intersectionPoints, other);
-    // Handle collision with obstacles or platforms here
-    // For simplicity, we assume any collision means landing on a platform
-    onGround = true;
-    velocity.y = 0;
+    if (other is Obstacle && !isInvulnerable) {
+      takeDamage();
+    } else if (other is Collectible) {
+      collectItem(other);
+    }
   }
 
-  /// Handles keyboard input for player movement and jumping.
+  void takeDamage() {
+    if (!isInvulnerable) {
+      health -= 1;
+      isInvulnerable = true;
+      if (health <= 0) {
+        // Handle player death
+      }
+    }
+  }
+
+  void collectItem(Collectible item) {
+    // Handle item collection
+  }
+
+  void checkInvulnerability(double dt) {
+    if (isInvulnerable) {
+      // Handle invulnerability timer
+    }
+  }
+
+  void makeVulnerable() {
+    isInvulnerable = false;
+  }
+}
+
+/// Represents an obstacle in the game.
+class Obstacle extends SpriteComponent with Collidable {
+  Obstacle(Vector2 position, Vector2 size)
+      : super(position: position, size: size);
+
   @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (event is RawKeyDownEvent) {
-      if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
-        velocity.x = -moveSpeed;
-      } else if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
-        velocity.x = moveSpeed;
-      }
-
-      if (keysPressed.contains(LogicalKeyboardKey.space) && onGround) {
-        jump();
-      }
-    } else if (event is RawKeyUpEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.arrowLeft ||
-          event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        velocity.x = 0;
-      }
-    }
-    return true;
+  Future<void> onLoad() async {
+    await super.onLoad();
+    addShape(HitboxRectangle());
   }
+}
 
-  /// Makes the player jump if they are on the ground.
-  void jump() {
-    if (onGround) {
-      velocity.y = jumpSpeed;
-      onGround = false;
-    }
-  }
+/// Represents a collectible item in the game.
+class Collectible extends SpriteComponent with Collidable {
+  Collectible(Vector2 position, Vector2 size)
+      : super(position: position, size: size);
 
-  /// Increments the player's score.
-  void addScore(int points) {
-    score += points;
-  }
-
-  /// Decreases the player's lives and handles game over logic.
-  void loseLife() {
-    lives -= 1;
-    if (lives <= 0) {
-      // Handle game over logic here
-    }
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    addShape(HitboxCircle());
   }
 }

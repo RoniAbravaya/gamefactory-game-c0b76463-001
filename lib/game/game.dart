@@ -1,94 +1,105 @@
-import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/components.dart';
 import 'package:flame/input.dart';
+import 'package:flutter/material.dart';
 
-/// Represents the game state for Test Claude Fix-platformer-01.
-enum GameState {
-  playing,
-  paused,
-  gameOver,
-  levelComplete,
-}
+enum GameState { playing, paused, gameOver, levelComplete }
 
-/// A FlameGame subclass for the platformer game Test Claude Fix-platformer-01.
 class TestClaudeFixPlatformer01Game extends FlameGame with TapDetector {
-  GameState _gameState = GameState.playing;
-  int _currentLevel = 1;
-  int _score = 0;
+  late GameState gameState;
+  int score = 0;
+  int lives = 3;
+  final Vector2 worldSize = Vector2(320, 180);
+  late AnalyticsService analyticsService;
+  late GameController gameController;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    // Load initial level, player, and UI overlays
-    await loadLevel(_currentLevel);
+    gameState = GameState.playing;
+    camera.viewport = FixedResolutionViewport(worldSize);
+    analyticsService = AnalyticsService();
+    gameController = GameController(this);
+    loadLevel(1);
   }
 
-  /// Handles tap input to make the player jump.
+  void loadLevel(int levelNumber) {
+    // Placeholder for level loading logic
+    // This would typically involve reading a level configuration file
+    // and initializing platforms, obstacles, and other game elements.
+    print("Loading level $levelNumber");
+    analyticsService.logEvent('level_start', {'level': levelNumber});
+  }
+
+  void updateScore(int points) {
+    score += points;
+    analyticsService.logEvent('score_update', {'score': score});
+  }
+
+  void loseLife() {
+    lives--;
+    if (lives <= 0) {
+      gameState = GameState.gameOver;
+      analyticsService.logEvent('level_fail', {});
+      // Show game over overlay
+      overlays.add('GameOverMenu');
+    }
+  }
+
+  void completeLevel() {
+    gameState = GameState.levelComplete;
+    analyticsService.logEvent('level_complete', {});
+    // Show level complete overlay
+    overlays.add('LevelCompleteMenu');
+  }
+
   @override
   void onTap() {
-    super.onTap();
-    if (_gameState == GameState.playing) {
-      // Implement player jump mechanic
+    if (gameState == GameState.playing) {
+      // Placeholder for player jump logic
+      print("Player tapped to jump");
     }
   }
 
-  /// Loads the specified level and initializes necessary components.
-  Future<void> loadLevel(int levelNumber) async {
-    // Load level components like platforms, obstacles, and collectibles
-    // Placeholder for level loading logic
-  }
-
-  /// Updates the game state.
-  void updateGameState(GameState newState) {
-    _gameState = newState;
-    switch (_gameState) {
-      case GameState.paused:
-        pauseEngine();
-        break;
-      case GameState.playing:
-        resumeEngine();
-        break;
-      case GameState.gameOver:
-        // Handle game over logic, such as showing overlays and resetting the level
-        break;
-      case GameState.levelComplete:
-        // Handle level completion, such as saving progress and loading the next level
-        break;
-    }
-  }
-
-  /// Increments the score by the given amount.
-  void increaseScore(int amount) {
-    _score += amount;
-    // Update UI overlay with new score
-  }
-
-  /// Resets the game to its initial state.
-  void resetGame() {
-    _gameState = GameState.playing;
-    _score = 0;
-    _currentLevel = 1;
-    // Reload the initial level and reset player position
-  }
-
-  /// Pauses the game.
-  void pauseGame() {
-    updateGameState(GameState.paused);
-  }
-
-  /// Resumes the game from a paused state.
   void resumeGame() {
-    updateGameState(GameState.playing);
+    gameState = GameState.playing;
+    overlays.remove('PauseMenu');
   }
 
-  /// Advances to the next level if available.
-  void nextLevel() {
-    if (_currentLevel < 10) { // Assuming 10 is the max level
-      _currentLevel++;
-      loadLevel(_currentLevel);
-      updateGameState(GameState.playing);
-    } else {
-      // Handle game completion, possibly showing an ending or credits screen
+  void pauseGame() {
+    gameState = GameState.paused;
+    overlays.add('PauseMenu');
+  }
+
+  void restartGame() {
+    gameState = GameState.playing;
+    score = 0;
+    lives = 3;
+    loadLevel(1);
+    overlays.remove('GameOverMenu');
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (gameState == GameState.playing) {
+      // Game logic updates, such as collision detection, go here
     }
+  }
+}
+
+class GameController {
+  final TestClaudeFixPlatformer01Game game;
+  GameController(this.game);
+
+  void pause() => game.pauseGame();
+  void resume() => game.resumeGame();
+  void restart() => game.restartGame();
+}
+
+class AnalyticsService {
+  void logEvent(String name, Map<String, dynamic> parameters) {
+    // Placeholder for analytics logging logic
+    print("Logging event: $name with parameters: $parameters");
   }
 }

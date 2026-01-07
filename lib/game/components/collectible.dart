@@ -1,58 +1,50 @@
 import 'package:flame/components.dart';
-import 'package:flame/geometry.dart';
-import 'package:flame/sprite.dart';
-import 'package:flame_audio/flame_audio.dart';
+import 'package:flame/collisions.dart';
+import 'package:flutter/material.dart';
 
-/// A component representing a collectible item in a platformer game.
-///
-/// It includes collision detection for pickup, a score value, optional animation,
-/// and a sound effect trigger upon collection.
-class Collectible extends SpriteAnimationComponent with HasGameRef, Hitbox, Collidable {
-  final int scoreValue;
-  final String pickupSound;
-  bool collected = false;
+class Collectible extends PositionComponent with CollisionCallbacks {
+  final int value;
+  double _floatOffset = 0;
 
-  /// Creates a new instance of a collectible item.
-  ///
-  /// [scoreValue] specifies the score the player receives upon collecting this item.
-  /// [pickupSound] is the path to the sound effect file that plays when the item is collected.
   Collectible({
-    required SpriteAnimation animation,
     required Vector2 position,
-    required Vector2 size,
-    this.scoreValue = 100,
-    this.pickupSound = 'pickup.mp3',
-  }) : super(animation: animation, position: position, size: size) {
-    addShape(HitboxRectangle());
-  }
+    this.value = 10,
+  }) : super(
+          position: position,
+          size: Vector2(30, 30),
+          anchor: Anchor.center,
+        );
 
   @override
-  void onMount() {
-    super.onMount();
-    // Ensure the collectible has a hitbox for collision detection
-    addHitbox(HitboxRectangle());
-  }
-
-  @override
-  void onCollision(Set<Vector2> intersectionPoints, Collidable other) {
-    super.onCollision(intersectionPoints, other);
-    // When a collision is detected, mark the collectible as collected
-    // and trigger the pickup sound effect.
-    if (!collected) {
-      collected = true;
-      try {
-        FlameAudio.play(pickupSound);
-      } catch (e) {
-        // If there's an error playing the sound, log or handle it gracefully
-        print('Error playing sound: $e');
-      }
-      removeFromParent();
-    }
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(CircleHitbox());
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    // Optional: Add any animations or effects for the collectible here
+    
+    position.y += 80 * dt;
+    
+    _floatOffset += dt * 5;
+    position.x += (0.5 * ((_floatOffset % 2) < 1 ? 1 : -1));
+    
+    if (position.y > 900) {
+      removeFromParent();
+    }
+  }
+
+  @override
+  void render(Canvas canvas) {
+    canvas.drawCircle(
+      Offset(size.x / 2, size.y / 2),
+      size.x / 2,
+      Paint()..color = Colors.amber,
+    );
+  }
+
+  void collect() {
+    removeFromParent();
   }
 }
